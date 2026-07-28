@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Send, Loader2, AlertTriangle, User, Bot } from "lucide-react";
-import { chatApi } from "@/lib/api";
-import { ApiException } from "@/lib/api";
+import { chatApi, ApiException } from "@/lib/api";
 import type { ChatIntent } from "@/lib/types";
 
 const STUDENT_ID_KEY = "th_student_id";
@@ -23,7 +22,8 @@ const INTENT_OPTIONS: { value: ChatIntent; label: string; desc: string }[] = [
   { value: "profile", label: "Profile", desc: "Profile summary & advice" },
 ];
 
-export default function AIChatPage() {
+// Inner component — uses useSearchParams, must live inside <Suspense>
+function ChatContent() {
   const searchParams = useSearchParams();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -229,5 +229,18 @@ export default function AIChatPage() {
         </motion.button>
       </div>
     </div>
+  );
+}
+
+// Outer page wraps ChatContent in Suspense — required by Next.js 16 for useSearchParams during build
+export default function AIChatPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-[calc(100dvh-8rem)]">
+        <Loader2 size={24} className="animate-spin text-[var(--accent-purple)]" />
+      </div>
+    }>
+      <ChatContent />
+    </Suspense>
   );
 }

@@ -1,0 +1,40 @@
+[Unit]
+Description=TrustHire AI — Spring Boot Backend
+After=network.target
+
+[Service]
+Type=simple
+User=trusthire
+Group=trusthire
+
+# Load secrets from a root-owned, mode-600 file — never in the unit itself
+EnvironmentFile=/etc/trusthire.env
+
+# Pick the JAR path from env (set by deploy.sh) or fall back to a fixed path
+ExecStart=/usr/bin/java \
+  -Xms128m -Xmx512m \
+  -Dspring.profiles.active=prod \
+  -Dapp.signing.secret=${TRUSTHIRE_SIGNING_SECRET} \
+  -Dapp.cors.allowed-origin=${TRUSTHIRE_CORS_ORIGIN} \
+  -Dollama.base-url=${TRUSTHIRE_OLLAMA_URL} \
+  -Dollama.model=${TRUSTHIRE_OLLAMA_MODEL} \
+  -jar ${TRUSTHIRE_PROJECT_ROOT}/backend/target/trusthire-ai-*.jar
+
+WorkingDirectory=${TRUSTHIRE_PROJECT_ROOT}/backend
+
+# Auto-restart on crash, not on clean exit
+Restart=on-failure
+RestartSec=5s
+
+# Security hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/tmp
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=trusthire-backend
+
+[Install]
+WantedBy=multi-user.target

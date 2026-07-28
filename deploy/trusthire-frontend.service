@@ -1,0 +1,30 @@
+[Unit]
+Description=TrustHire AI — Next.js Frontend
+After=network.target trusthire-backend.service
+
+[Service]
+Type=simple
+User=trusthire
+Group=trusthire
+
+EnvironmentFile=/etc/trusthire.env
+
+WorkingDirectory=${TRUSTHIRE_PROJECT_ROOT}/frontend
+
+# next start serves the production build on port 3000
+ExecStart=/usr/bin/env node_modules/.bin/next start -p 3000
+
+Restart=on-failure
+RestartSec=5s
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=${TRUSTHIRE_PROJECT_ROOT}/frontend/.next/cache
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=trusthire-frontend
+
+[Install]
+WantedBy=multi-user.target

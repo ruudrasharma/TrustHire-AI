@@ -21,6 +21,7 @@ Thumbs.db
 secrets.properties
 application-prod.properties
 application-local.properties
+deploy/server.env
 
 # Logs
 *.log

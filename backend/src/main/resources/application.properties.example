@@ -1,0 +1,22 @@
+spring.application.name=trusthire-ai
+
+server.port=8080
+
+# Ollama LLM configuration
+ollama.base-url=http://localhost:11434
+ollama.model=llama3.2
+ollama.connect-timeout-seconds=3
+ollama.read-timeout-seconds=60
+
+# HMAC signing secret — set TRUSTHIRE_SIGNING_SECRET env var in production
+# See application.properties for actual property reference
+# Example:
+#   export TRUSTHIRE_SIGNING_SECRET=your-random-256-bit-secret
+app.signing.secret=CHANGE_ME_IN_PRODUCTION
+
+# CORS — frontend dev server
+app.cors.allowed-origin=http://localhost:3000
+
+# Logging — never log CGPA, backlogs, secrets, or full prompts
+logging.level.com.trusthire=INFO
+logging.level.root=WARN

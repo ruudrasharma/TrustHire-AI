@@ -1,0 +1,30 @@
+# Root — TrustHire AI monorepo
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+.vscode/settings.json
+.vscode/launch.json
+*.swp
+*.swo
+
+# Secrets / environment overrides (NEVER commit these)
+*.env
+.env
+.env.*
+secrets.properties
+application-prod.properties
+application-local.properties
+
+# Logs
+*.log
+logs/
+
+# OS files
+*.orig

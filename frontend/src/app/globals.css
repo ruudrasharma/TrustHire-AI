@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+/* ============================================================
+   TrustHire AI — Global CSS
+   Design system: "Verified Graphite"
+   All hex values live here; components use only CSS variables.
+   ============================================================ */
+
+@layer base {
+  :root {
+    /* Light mode (default) */
+    --bg-base:        #F7F8FA;
+    --surface-1:      #FFFFFF;
+    --surface-2:      #F1F3F6;
+    --surface-glass:  rgba(255, 255, 255, 0.75);
+    --text-primary:   #0F1117;
+    --text-muted:     #6B7280;
+    --border:         rgba(0, 0, 0, 0.07);
+    --border-strong:  rgba(0, 0, 0, 0.13);
+
+    /* Semantic accents — slightly deeper for light-mode contrast */
+    --accent-cyan:    #0891B2;
+    --accent-purple:  #7C3AED;
+    --accent-emerald: #059669;
+    --accent-amber:   #D97706;
+    --accent-rose:    #E11D48;
+  }
+
+  .dark {
+    --bg-base:        #0B0D10;
+    --surface-1:      #12151A;
+    --surface-2:      #181C22;
+    --surface-glass:  rgba(18, 21, 26, 0.55);
+    --text-primary:   #F5F5F4;
+    --text-muted:     #9CA3AF;
+    --border:         rgba(255, 255, 255, 0.08);
+    --border-strong:  rgba(255, 255, 255, 0.14);
+
+    --accent-cyan:    #22D3EE;
+    --accent-purple:  #A78BFA;
+    --accent-emerald: #34D399;
+    --accent-amber:   #FBBF24;
+    --accent-rose:    #FB7185;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-geist-sans), Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background-color: rgba(8, 145, 178, 0.15);
+    color: var(--accent-cyan);
+  }
+
+  /* Focus rings — WCAG AA */
+  :focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+}
+
+/* ============================================================
+   Utility classes (used in components via className)
+   ============================================================ */
+
+/* Glass surface */
+.glass {
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* Surface cards */
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.card-elevated {
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+/* Monospace for crypto/ID data — intentional visual signal */
+.mono {
+  font-family: var(--font-geist-mono), "JetBrains Mono", "Fira Code", monospace;
+  font-variant-ligatures: none;
+}
+
+/* Status colors — reserved exclusively for semantic meaning */
+.status-eligible   { color: var(--accent-emerald); }
+.status-pending    { color: var(--accent-amber); }
+.status-rejected   { color: var(--accent-rose); }
+.status-ai         { color: var(--accent-purple); }
+
+/* Skeleton loading pulse */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    rgba(0,0,0,0.04) 50%,
+    var(--surface-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+@keyframes skeletonShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Dot glow for active orbit dock item */
+.orbit-glow {
+  box-shadow: 0 0 12px rgba(8, 145, 178, 0.25), 0 0 3px rgba(8, 145, 178, 0.35);
+}
+
+/* Hash chain connector line */
+.chain-line {
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent-cyan), transparent);
+}
+
+/* Perforated receipt edge */
+.receipt-edge {
+  background-image: radial-gradient(circle at 0 50%, var(--bg-base) 8px, transparent 8px),
+                    radial-gradient(circle at 100% 50%, var(--bg-base) 8px, transparent 8px);
+  background-size: 16px 24px;
+  background-repeat: repeat-y;
+}

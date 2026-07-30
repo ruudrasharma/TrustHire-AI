@@ -1,0 +1,246 @@
+{
+  "info": {
+    "name": "TrustHire AI",
+    "description": "Full API coverage for TrustHire AI — students, companies, drives, eligibility, applications, audit trail, receipts, and chat.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8081" },
+    { "key": "studentId", "value": "STU-001" },
+    { "key": "companyId", "value": "CMP-001" },
+    { "key": "driveId", "value": "DRV-101" },
+    { "key": "applicationId", "value": "APP-501" }
+  ],
+  "item": [
+    {
+      "name": "Students",
+      "item": [
+        {
+          "name": "Create Student",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/students",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aditi Rao\",\n  \"email\": \"aditi@example.edu\",\n  \"programme\": \"B.Tech CSE\",\n  \"graduationYear\": 2027,\n  \"cgpa\": 8.1,\n  \"activeBacklogs\": 0,\n  \"skills\": [\"Java\", \"Spring Boot\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Duplicate Student (expect 409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/students",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aditi Rao\",\n  \"email\": \"aditi@example.edu\",\n  \"programme\": \"B.Tech CSE\",\n  \"graduationYear\": 2027,\n  \"cgpa\": 8.1,\n  \"activeBacklogs\": 0,\n  \"skills\": [\"Java\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Student",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/students/{{studentId}}" }
+        },
+        {
+          "name": "Update Student",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/students/{{studentId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aditi Rao\",\n  \"email\": \"aditi@example.edu\",\n  \"programme\": \"B.Tech CSE\",\n  \"graduationYear\": 2027,\n  \"cgpa\": 8.4,\n  \"activeBacklogs\": 0,\n  \"skills\": [\"Java\", \"Spring Boot\", \"REST\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Student Applications",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/students/{{studentId}}/applications" }
+        }
+      ]
+    },
+    {
+      "name": "Companies",
+      "item": [
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/companies",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Acme Corp\",\n  \"sector\": \"Fintech\",\n  \"description\": \"Payments infrastructure\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List Companies",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/companies" }
+        },
+        {
+          "name": "Get Company",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/companies/{{companyId}}" }
+        }
+      ]
+    },
+    {
+      "name": "Drives",
+      "item": [
+        {
+          "name": "Create Drive",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/drives",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyId\": \"{{companyId}}\",\n  \"role\": \"Backend Engineer\",\n  \"location\": \"Bengaluru\",\n  \"packageOffered\": \"12 LPA\",\n  \"deadline\": \"2026-08-15T23:59:59\",\n  \"requiredSkills\": [\"Java\", \"Spring Boot\"],\n  \"eligibilityCriteria\": {\n    \"minCgpa\": 7.5,\n    \"maxBacklogs\": 0,\n    \"eligibleProgrammes\": [\"B.Tech CSE\"],\n    \"minGradYear\": 2026\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Drive for Unknown Company (expect 404)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/drives",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyId\": \"CMP-DOES-NOT-EXIST\",\n  \"role\": \"Backend Engineer\",\n  \"location\": \"Bengaluru\",\n  \"packageOffered\": \"12 LPA\",\n  \"deadline\": \"2026-08-15T23:59:59\",\n  \"requiredSkills\": [\"Java\"],\n  \"eligibilityCriteria\": { \"minCgpa\": 7.5, \"maxBacklogs\": 0, \"eligibleProgrammes\": [\"B.Tech CSE\"], \"minGradYear\": 2026 }\n}"
+            }
+          }
+        },
+        {
+          "name": "List/Filter Drives",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/drives?role=Backend" }
+        },
+        {
+          "name": "Get Drive",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/drives/{{driveId}}" }
+        },
+        {
+          "name": "Check Eligibility (signed)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/drives/{{driveId}}/eligibility/{{studentId}}" }
+        }
+      ]
+    },
+    {
+      "name": "Applications",
+      "item": [
+        {
+          "name": "Submit Application",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/drives/{{driveId}}/applications",
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": \"{{studentId}}\"\n}" }
+          }
+        },
+        {
+          "name": "Submit Duplicate Application (expect 409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/drives/{{driveId}}/applications",
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": \"{{studentId}}\"\n}" }
+          }
+        },
+        {
+          "name": "List All Applications (coordinator)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/applications" }
+        },
+        {
+          "name": "Get Application",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/applications/{{applicationId}}" }
+        },
+        {
+          "name": "Update Application Status (valid)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/applications/{{applicationId}}/status",
+            "body": { "mode": "raw", "raw": "{\n  \"newStatus\": \"UNDER_REVIEW\"\n}" }
+          }
+        },
+        {
+          "name": "Update Application Status (invalid transition, expect 409)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/applications/{{applicationId}}/status",
+            "body": { "mode": "raw", "raw": "{\n  \"newStatus\": \"SUBMITTED\"\n}" }
+          }
+        },
+        {
+          "name": "Get Audit Trail (hash chain)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/applications/{{applicationId}}/audit" }
+        },
+        {
+          "name": "Get Verifiable Receipt",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/applications/{{applicationId}}/receipt" }
+        }
+      ]
+    },
+    {
+      "name": "Verification",
+      "item": [
+        {
+          "name": "Verify Receipt (paste a real receipt body)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/verify",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicationId\": \"{{applicationId}}\",\n  \"studentId\": \"{{studentId}}\",\n  \"driveId\": \"{{driveId}}\",\n  \"status\": \"UNDER_REVIEW\",\n  \"chainTipHash\": \"PASTE_FROM_RECEIPT_RESPONSE\",\n  \"issuedAt\": \"PASTE_FROM_RECEIPT_RESPONSE\",\n  \"signature\": \"PASTE_FROM_RECEIPT_RESPONSE\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Assistant",
+      "item": [
+        {
+          "name": "General FAQ",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/chat",
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": \"{{studentId}}\",\n  \"message\": \"What documents are usually required for a campus placement application?\"\n}" }
+          }
+        },
+        {
+          "name": "Eligibility Explanation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/chat",
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": \"{{studentId}}\",\n  \"driveId\": \"{{driveId}}\",\n  \"message\": \"Why am I not eligible for this drive?\"\n}" }
+          }
+        },
+        {
+          "name": "Preparation Guidance",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/chat",
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": \"{{studentId}}\",\n  \"driveId\": \"{{driveId}}\",\n  \"message\": \"How should I prepare for this role?\"\n}" }
+          }
+        },
+        {
+          "name": "Profile Summary",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/chat",
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": \"{{studentId}}\",\n  \"message\": \"Summarize my placement profile.\"\n}" }
+          }
+        }
+      ]
+    }
+  ]
+}

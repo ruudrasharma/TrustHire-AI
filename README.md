@@ -6,6 +6,9 @@ TrustHire AI is a full-stack campus placement platform where every eligibility d
 
 Built as a 5-day capstone demonstrating OOP, design patterns (Strategy, Adapter, Repository), REST API design, and local LLM integration.
 
+📄 **Docs:** [Requirements](docs/requirements-and-assumptions.md) · [HLD](docs/hld-architecture.md) · [LLD](docs/lld-class-diagram.md) · [API Contract](docs/api-contract.md) · [Sequences](docs/sequence-apply.md)
+📬 **Postman:** `postman/TrustHireAI.postman_collection.json` — import and run all 21 test scenarios
+
 ---
 
 ## ✨ What makes it different
@@ -206,6 +209,39 @@ Tests cover:
 - No email/SMS notifications  
 - No RAG, vector DB, or agentic LLM
 - No distributed system / Kafka
+
+---
+
+## Sample Data & Initialization Sequence
+
+TrustHire AI starts with empty in-memory repositories — there is no database to seed. To get a working demo state, run these requests in order (via Postman or curl) after starting the backend:
+
+1. `POST /api/students` — create at least one student (create one with CGPA just above and one just below the drive minimum to demonstrate both eligible and ineligible paths).
+2. `POST /api/companies` — create at least one company.
+3. `POST /api/drives` — create a drive referencing that company, with a future deadline.
+4. `GET /api/drives/{driveId}/eligibility/{studentId}` — confirm the signed eligibility result.
+5. `POST /api/drives/{driveId}/applications` — submit an application for the eligible student.
+6. `PATCH /api/applications/{id}/status` — move it through one or two valid transitions to populate the hash chain.
+
+The `postman/TrustHireAI.postman_collection.json` collection runs this exact sequence — import it and run **Students → Companies → Drives → Applications** in order for a fully seeded demo in under a minute. All data resets on backend restart, by design.
+
+---
+
+## Known Limitations & Future Work
+
+**Current limitations (intentional, per project scope):**
+- No authentication/authorization — all endpoints are open for demonstration purposes.
+- No persistent database — data resets on every backend restart.
+- No production-grade rate limiting, request signing, or API key management.
+- The hash-chained audit trail proves internal consistency (no reordering/deletion undetected) but is not anchored to any external tamper-proof ledger.
+- Ollama chatbot quality depends on the locally installed model; no fine-tuning or retrieval augmentation is used.
+
+**Natural next steps for a production version:**
+- Swap in-memory repositories for PostgreSQL — the Repository interface pattern means zero service-layer changes.
+- Add OAuth2/JWT authentication with Student/Coordinator roles gating the relevant endpoints.
+- Anchor the audit chain tip hash to an external, publicly-verifiable log for stronger tamper evidence.
+- Add a Redis caching layer for drive listings and FAQ responses.
+- Expand the AI assistant with a small FAQ knowledge file (no vector DB needed for v2).
 
 ---
 
